@@ -1,0 +1,91 @@
+# Rift Browser .gitignore
+
+# Dependencies
+node_modules/
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Build outputs
+dist/
+build/
+out/
+release/
+
+# TypeScript
+*.tsbuildinfo
+*.js.map
+
+# Electron
+# Compiled app for different platforms
+/out-*
+/*.exe
+/*.dmg
+/*.AppImage
+/*.deb
+/*.rpm
+/*.snap
+
+# Development
+.DS_Store
+Thumbs.db
+*.log
+*.pid
+*.seed
+*.pid.lock
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+lerna-debug.log*
+
+# IDE
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.idea/
+*.swp
+*.swo
+*~
+.project
+.classpath
+.settings/
+*.sublime-workspace
+*.sublime-project
+
+# Testing
+coverage/
+.nyc_output/
+*.lcov
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# User data and settings (for testing)
+user-data/
+profiles/
+
+# Ad blocking filters (if dynamically downloaded)
+filters/*.txt
+!filters/.gitkeep
+
+# OS
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Desktop.ini
+
+# Webpack
+.webpack/
+
+# Electron-builder output
+/dist_electron/
+
+# Cache
+.cache/
+.parcel-cache/
+.eslintcache
