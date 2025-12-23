@@ -6,26 +6,54 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 	<title>Rift by Abi</title>
 	<style>
+		* {
+			box-sizing: border-box;
+		}
+
 		body {
 			width: 100vw;
-			height: 100vh;
-			display: flex;
-			flex-flow: column;
 			padding: 0;
 			margin: 0;
 			background-color: #2d2d2d;
 		}
 
+		#toolbar-container {
+			background-color: #1f1f1f;
+			padding: 4px 16px;
+			height: 40px;
+		}
+
 		#toolbar {
 			color: white;
-			background-color: ;
-			height: 60px;
+			display: flex;
+			gap: 10px;
+			height: 100%;
+		}
+
+		#omnibox {
+			all: unset;
+			flex-grow: 1;
+			background-color: #474747;
+			padding-inline: 16px;
+			border-radius: 100px;
+		}
+
+		.btn {
+			all: unset;
+			cursor: pointer;
 		}
 	</style>
 </head>
 
 <body>
-	<div id="toolbar"></div>
+	<div id="toolbar-container">
+		<div id="toolbar">
+			<button class="btn" id="reload">Reload</button>
+			<button class="btn" id="back">backward</button>
+			<input type="text" id="omnibox" placeholder="Search Google or type a URL" />
+			<button class="btn" id="forward">Forward</button>
+		</div>
+	</div>
 </body>
 
 </html>
