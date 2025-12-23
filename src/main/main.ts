@@ -23,9 +23,19 @@ function createWindow() {
         },
     });
 
-    mainWindow.contentView.addChildView(view);
     view.setBounds({ x: 0, y: 60, width: 1200, height: 800 });
-    view.webContents.loadURL('https://electronjs.org/');
+    view.webContents.loadURL('https://youtube.com/');
+    mainWindow.contentView.addChildView(view);
+
+    mainWindow.on('resize', () => {
+        const rectangle = mainWindow.getBounds();
+        view.setBounds({
+            x: 0,
+            y: 60,
+            width: rectangle.width,
+            height: rectangle.height,
+        });
+    });
 }
 
 app.whenReady().then(() => {
