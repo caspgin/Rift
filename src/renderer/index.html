@@ -33,9 +33,17 @@
 		#omnibox {
 			all: unset;
 			flex-grow: 1;
-			background-color: #474747;
+			background-color: #2a2a2a;
 			padding-inline: 16px;
 			border-radius: 100px;
+		}
+
+		#omnibox:hover {
+			background-color: #474747;
+		}
+
+		#omnibox:focus-within {
+			background-color: #2a2a2a;
 		}
 
 		.btn {
@@ -54,6 +62,10 @@
 			<button class="btn" id="forward">Forward</button>
 		</div>
 	</div>
+
+	<script type="module" src="renderer.js">
+		initRenderer();
+	</script>
 </body>
 
 </html>
