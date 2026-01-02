@@ -31,6 +31,12 @@ export function registerKeymaps(webContents: WebContents, state: BrowserType) {
 				event.preventDefault();
 				state.window.webContents.focus();
 				state.window.webContents.send('focus-omnibox');
+			} else if (input.key === 'Escape') {
+				event.preventDefault();
+				state.window.webContents.send('blur-omnibox');
+				const activeView = state.views.get(state.activeViewId);
+				if (!activeView) return;
+				activeView?.webContents.focus();
 			}
 		},
 	);

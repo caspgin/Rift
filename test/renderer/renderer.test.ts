@@ -1,6 +1,4 @@
-// @vitest-environment happy-dom
-//
-//
+//@vitest-environment happy-dom
 
 import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { initRenderer } from '../../src/renderer/renderer';
@@ -13,6 +11,7 @@ describe('Integration testing omnibox and urlParser', () => {
 		(window as any).api = {
 			navigate: vi.fn(),
 			onFocusOmnibox: vi.fn(),
+			onBlurOmnibox: vi.fn(),
 		};
 	});
 	test('should log parsed URL when Enter is pressed', () => {
@@ -26,18 +25,18 @@ describe('Integration testing omnibox and urlParser', () => {
 		);
 		expect(url).toMatch(`https://google.com`);
 	});
- 
-	test('should test focus on omnibox', () =>             {
+
+	test('should test focus on omnibox', () => {
 		const omnibox = document.getElementById('omnibox') as HTMLInputElement;
 		const spyBox = vi.spyOn(omnibox, 'focus');
-		let callback : Function | undefined;
-		(window as any).api.onFocusOmnibox = (cb : Function) => {
+		let callback: Function | undefined;
+		(window as any).api.onFocusOmnibox = (cb: Function) => {
 			callback = cb;
-		}
+		};
 
 		initRenderer();
 
-		if(callback) callback();
+		if (callback) callback();
 		expect(spyBox).toHaveBeenCalled();
 	});
 });

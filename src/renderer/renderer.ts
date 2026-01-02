@@ -18,6 +18,10 @@ export function initRenderer() {
 		omnibox.focus();
 		omnibox.select();
 	});
+
+	window.api.onBlurOmnibox(() => {
+		omnibox.blur();
+	});
 }
 
 if (typeof window !== 'undefined') {
