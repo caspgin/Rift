@@ -15,10 +15,10 @@ export function shouldBlock(url: string, blockedSet: Set<string>): boolean {
 	}
 }
 
-export function initAdBlocking(): void {
+export async function initAdBlocking(): Promise<void> {
 	const hashSet: Set<string> = new Set<string>();
 	const hostPath: string = getHostPath();
-	buildSet(hostPath, hashSet);
+	await buildSet(hostPath, hashSet);
 	const filter = { urls: ['http://*/*', 'https://*/*'] };
 
 	session.defaultSession.webRequest.onBeforeRequest(
@@ -34,21 +34,34 @@ export function initAdBlocking(): void {
 	);
 }
 
-export function buildSet(hostPath: string, hashSet: Set<string>): void {
-	const stream: fs.ReadStream = fs.createReadStream(hostPath);
-	const rl: readline.Interface = readline.createInterface({ input: stream });
-	rl.on('line', (line: string) => {
-		if (!line.startsWith('0.0.0.0')) {
-			return;
-		}
-		const domain: string = line.split(' ', 2)[1].trim();
-		if (!domain) {
-			return;
-		}
-		hashSet.add(domain);
-	});
-	rl.on('close', () => {
-		console.log(`Read ${hashSet.size} domains for exact blocking in set`);
+export function buildSet(
+	hostPath: string,
+	hashSet: Set<string>,
+): Promise<Set<string>> {
+	return new Promise((resolve, reject) => {
+		const stream: fs.ReadStream = fs.createReadStream(hostPath);
+
+		stream.on('error', (error: Error) => reject(error));
+		const rl: readline.Interface = readline.createInterface({
+			input: stream,
+		});
+
+		rl.on('line', (line: string) => {
+			if (!line.startsWith('0.0.0.0')) {
+				return;
+			}
+			const domain: string = line.split(' ', 2)[1].trim();
+			if (!domain) {
+				return;
+			}
+			hashSet.add(domain);
+		});
+		rl.on('close', () => {
+			console.log(
+				`Read ${hashSet.size} domains for exact blocking in set`,
+			);
+			resolve(hashSet);
+		});
 	});
 }
 

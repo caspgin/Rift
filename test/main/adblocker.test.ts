@@ -1,20 +1,27 @@
-import { describe, expect, test } from 'vitest';
+import { describe, expect, test, vi } from 'vitest';
 
-import { shouldBlock } from '../../src/main/adblocker';
+import { buildSet, shouldBlock } from '../../src/main/adblocker';
 
 describe('Adblock engine tests', () => {
+	test('buildSet test', async () => {
+		const hashSet: Set<string> = new Set<string>();
+		expect(hashSet.size).toBe(0);
+		const spy = vi.spyOn(console, 'log');
+		await buildSet('assets/hosts.txt', hashSet);
+
+		expect(hashSet.size).toBe(82907);
+		expect(spy).toHaveBeenCalledWith(
+			`Read ${hashSet.size} domains for exact blocking in set`,
+		);
+	});
 	test('should block ads', () => {
-		const badUrl = `https://googleads.g.doubleClick.net/pagead/ads?client=ca-pub-123`;
-		expect(shouldBlock(badUrl)).toBe(true);
+		const mockSet = new Set(['doubleclick.net', 'ads.google.com']);
+		expect(shouldBlock('https://doubleclick.net/js', mockSet)).toBe(true);
+		expect(shouldBlock('https://safe.com', mockSet)).toBe(false);
 	});
 
-	test('should not block regular sites', () => {
-		const goodUrl = `https://google.com/search?q=electron+js`;
-		expect(shouldBlock(goodUrl)).toBe(false);
-	});
-
-	test('should block common tracking scripts', () => {
-		const trackerUrl = 'https://www.google-analytics.com/analytics.js';
-		expect(shouldBlock(trackerUrl)).toBe(true);
+	test('FAILS: should block subdomains of blocked domains', () => {
+		const mockSet = new Set(['doubleclick.net']);
+		expect(shouldBlock('https://ads.doubleclick.net', mockSet)).toBe(true);
 	});
 });
