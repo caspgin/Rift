@@ -119,7 +119,6 @@ export function createBrowser(): BrowserType {
 			state.activeViewId,
 		);
 		if (!activeView) return;
-		//const url = activeView.webContents.getURL();
 		activeView.webContents.focus();
 	});
 

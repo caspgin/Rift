@@ -5,15 +5,18 @@ import {
 	createView,
 	registerIpcHandler,
 } from './browser';
+import { initAdBlocking } from './adblocker';
 
 function setup() {
 	const state: BrowserType = createBrowser();
 	registerIpcHandler(state);
+	initAdBlocking();
 	createView(state, `https://google.com`);
 }
 
 app.whenReady().then(() => {
 	setup();
+
 	//MacOs pattern
 	app.on('activate', () => {
 		if (BrowserWindow.getAllWindows().length == 0) {

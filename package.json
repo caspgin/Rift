@@ -18,8 +18,8 @@
         "build:renderer": "tsc -p tsconfig.renderer.json",
         "watch:renderer": "tsc -p tsconfig.renderer.json --watch",
         "copy:html": "copyfiles -E -u 1 ./src/renderer/index.html dist/ --watch",
-        "dev": "concurrently \"npm run watch:main\" \"npm run watch:renderer\" \"npm run copy:html\" \"nodemon --watch dist  --exec electron .\"",
-        "start": "electron ."
+        "copy:assets": "copyfiles -E -u 1 ./assets/* dist/assets/ ",
+        "dev": "concurrently  \"npm run watch:main\" \"npm run watch:renderer\" \"npm run copy:assets\" \"npm run copy:html\" \"nodemon --watch dist  --exec electron .\""
     },
     "devDependencies": {
         "@types/node": "^25.0.3",
