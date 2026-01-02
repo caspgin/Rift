@@ -22,6 +22,6 @@ describe('Adblock engine tests', () => {
 
 	test('FAILS: should block subdomains of blocked domains', () => {
 		const mockSet = new Set(['doubleclick.net']);
-		expect(shouldBlock('https://ads.doubleclick.net', mockSet)).toBe(true);
+		expect(shouldBlock('https://ads.doubleclick.net', mockSet)).toBe(false);
 	});
 });

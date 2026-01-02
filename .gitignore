@@ -1,4 +1,10 @@
 # Rift Browser .gitignore
+# Vitest
+.vitest-result/
+.vitest-cache/
+__snapshots__/
+coverage/
+html/
 
 # Dependencies
 node_modules/
