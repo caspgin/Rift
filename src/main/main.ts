@@ -1,14 +1,14 @@
-import { app, BrowserWindow, WebContentsView } from 'electron';
+import { app, BrowserWindow, ipcMain, WebContentsView } from 'electron';
 import {
 	BrowserType,
 	createBrowser,
 	createView,
-	handleIpcRegister,
+	registerIpcHandler,
 } from './browser';
 
 function setup() {
 	const state: BrowserType = createBrowser();
-	handleIpcRegister(state);
+	registerIpcHandler(state);
 	createView(state, `https://google.com`);
 }
 

@@ -1,4 +1,10 @@
-import { BrowserWindow, ipcMain, Rectangle, WebContentsView } from 'electron';
+import {
+	BrowserWindow,
+	ipcMain,
+	Rectangle,
+	WebContents,
+	WebContentsView,
+} from 'electron';
 import path from 'path';
 
 export const DEFAULTS = {
@@ -14,7 +20,23 @@ export interface BrowserType {
 	activeViewId: number;
 }
 
-export function handleIpcRegister(state: BrowserType) {
+export function registerKeymaps(webContents: WebContents, state: BrowserType) {
+	webContents.on(
+		'before-input-event',
+		(event: Electron.Event, input: Electron.Input) => {
+			if (
+				(input.control || input.meta) &&
+				input.key.toLowerCase() === 'k'
+			) {
+				event.preventDefault();
+				state.window.webContents.focus();
+				state.window.webContents.send('focus-omnibox');
+			}
+		},
+	);
+}
+
+export function registerIpcHandler(state: BrowserType) {
 	ipcMain.on('navigate', (event, url) => {
 		const activeView = state.views.get(state.activeViewId);
 		if (activeView) {
@@ -31,6 +53,9 @@ export function createView(state: BrowserType, url: string): void {
 			plugins: false,
 		},
 	});
+
+	registerKeymaps(view.webContents, state);
+
 	const size: Rectangle = state.window.getBounds();
 	view.setBounds({
 		x: DEFAULTS.webContentXBound,
@@ -80,6 +105,16 @@ export function createBrowser(): BrowserType {
 				height: size.height - DEFAULTS.webContentYBound,
 			});
 		});
+	});
+	registerKeymaps(window.webContents, state);
+
+	window.on('focus', () => {
+		const activeView: WebContentsView | undefined = state.views.get(
+			state.activeViewId,
+		);
+		if (!activeView) return;
+		//const url = activeView.webContents.getURL();
+		activeView.webContents.focus();
 	});
 
 	window.webContents.openDevTools({ mode: 'detach' });

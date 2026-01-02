@@ -1,8 +1,21 @@
 import { describe, test, vi, expect, beforeEach } from 'vitest';
-import { createBrowser, createView, DEFAULTS } from '../../src/main/browser';
+import {
+	createBrowser,
+	createView,
+	DEFAULTS,
+	registerKeymaps,
+} from '../../src/main/browser';
 import { BrowserWindow, WebContentsView } from 'electron';
 
 vi.mock('electron', () => {
+	const createWebContentsMock = () => ({
+		loadURL: vi.fn(),
+		id: 123,
+		openDevTools: vi.fn(),
+		on: vi.fn(),
+		focus: vi.fn(),
+		send: vi.fn(),
+	});
 	return {
 		app: {
 			whenReady: () => Promise.resolve(),
@@ -17,18 +30,13 @@ vi.mock('electron', () => {
 				removeMenu: vi.fn(),
 				contentView: { addChildView: vi.fn() },
 				getBounds: vi.fn(),
-				webContents: {
-					openDevTools: vi.fn(),
-				},
+				webContents: createWebContentsMock(),
 			};
 		}),
 		WebContentsView: vi.fn().mockImplementation(function() {
 			return {
 				setBounds: vi.fn(),
-				webContents: {
-					loadURL: vi.fn(),
-					id: 123,
-				},
+				webContents: createWebContentsMock(),
 			};
 		}),
 	};
@@ -102,5 +110,39 @@ describe('Browser Logic Engine', () => {
 		);
 
 		expect(state.window.contentView.addChildView).toHaveBeenCalled();
+	});
+
+	test('registerKeymaps test', () => {
+		const state = createBrowser();
+
+		const webContentView = new WebContentsView({});
+
+		registerKeymaps(webContentView.webContents, state);
+
+		expect(webContentView.webContents.on).toHaveBeenCalled();
+		const calls = (webContentView.webContents.on as any).mock.calls;
+		const callback = calls.find(
+			(c: any) => c[0] === 'before-input-event',
+		)[1];
+
+		const event = { preventDefault: vi.fn() };
+		const input = { control: true, meta: true, key: 'k' };
+		callback(event, input);
+
+		expect(event.preventDefault).toHaveBeenCalled();
+		expect(state.window.webContents.focus).toHaveBeenCalled();
+		expect(state.window.webContents.send).toHaveBeenCalledWith(
+			'focus-omnibox',
+		);
+
+		vi.clearAllMocks();
+
+		input.key = 'q';
+		callback(event, input);
+		expect(event.preventDefault).not.toHaveBeenCalled();
+		expect(state.window.webContents.focus).not.toHaveBeenCalled();
+		expect(state.window.webContents.send).not.toHaveBeenCalledWith(
+			'focus-omnibox',
+		);
 	});
 });

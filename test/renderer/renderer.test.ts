@@ -12,6 +12,7 @@ describe('Integration testing omnibox and urlParser', () => {
 		document.body.innerHTML = '<input id="omnibox" />';
 		(window as any).api = {
 			navigate: vi.fn(),
+			onFocusOmnibox: vi.fn(),
 		};
 	});
 	test('should log parsed URL when Enter is pressed', () => {
@@ -24,5 +25,19 @@ describe('Integration testing omnibox and urlParser', () => {
 			`https://google.com`,
 		);
 		expect(url).toMatch(`https://google.com`);
+	});
+ 
+	test('should test focus on omnibox', () =>             {
+		const omnibox = document.getElementById('omnibox') as HTMLInputElement;
+		const spyBox = vi.spyOn(omnibox, 'focus');
+		let callback : Function | undefined;
+		(window as any).api.onFocusOmnibox = (cb : Function) => {
+			callback = cb;
+		}
+
+		initRenderer();
+
+		if(callback) callback();
+		expect(spyBox).toHaveBeenCalled();
 	});
 });
