@@ -8,7 +8,12 @@ import path from 'node:path';
 export function shouldBlock(url: string, blockedSet: Set<string>): boolean {
 	try {
 		const host = new URL(url).hostname;
+
 		if (blockedSet.has(host)) return true;
+		for (const domain of blockedSet) {
+			if (host.endsWith('.' + domain)) return true;
+		}
+
 		return false;
 	} catch {
 		return false;
