@@ -32,7 +32,6 @@ export async function initAdBlocking(): Promise<void> {
 			if (shouldBlock(details.url, hashSet)) {
 				callback({ cancel: true });
 			} else {
-				console.log(`Not Blocked : ${details.url}`);
 				callback({ cancel: false });
 			}
 		},

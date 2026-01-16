@@ -1,0 +1,19 @@
+{
+    "trace_config": {
+        "included_categories": [
+            "toplevel",
+            "browser",
+            "electron",
+            "blink", // For Rendering
+            "viz",
+            "loading", // For Page Load
+            "v8",
+            "v8.execute",
+            "startup",
+            "blink.user_timing", // For performance.mark()
+            "disabled-by-default-memory-infra", // For Memory
+            "memory-infra"
+        ],
+        "excluded_categories": ["node.async_hooks", "*"]
+    }
+}
