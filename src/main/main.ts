@@ -15,13 +15,7 @@ function setup() {
 }
 
 app.whenReady().then(() => {
-	const processTime = process.uptime() * 1000; // Engine Time relative to T=0
-	console.log(
-		`[Metric] AppReady fired at: ${processTime.toFixed(2)}ms (Process Uptime)`,
-	);
-
 	setup();
-
 	//MacOs pattern
 	app.on('activate', () => {
 		if (BrowserWindow.getAllWindows().length == 0) {

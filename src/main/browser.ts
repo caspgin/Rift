@@ -57,9 +57,9 @@ export function createView(state: BrowserType, url: string): void {
 		webPreferences: {
 			nodeIntegration: false,
 			plugins: false,
+			devTools: false,
 		},
 	});
-
 	registerKeymaps(view.webContents, state);
 
 	const size: Rectangle = state.window.getBounds();
@@ -121,8 +121,6 @@ export function createBrowser(): BrowserType {
 		if (!activeView) return;
 		activeView.webContents.focus();
 	});
-
-	window.webContents.openDevTools({ mode: 'detach' });
 
 	return state;
 }
